@@ -9,14 +9,20 @@
 <body>
     <div class="signup-container">
         <h1>Signup</h1>
-        <form>
-            <input type="text" class="input-field" placeholder="Name" required>
-            <input type="email" class="input-field" placeholder="Email" required>
-            <input type="tel" class="input-field" placeholder="Phone" required>
-            <input type="password" class="input-field" placeholder="Password" required><br>
-            <button type="submit" class="signup-button">Signup</button>
+        <form id="form-signup">
+            <input type="text" class="input-field" id="input-name" placeholder="Name" required>
+            <input type="email" class="input-field" id="input-email" placeholder="Email" required>
+            <input type="tel" class="input-field" id="input-phone" placeholder="Phone" required>
+            <input type="password" class="input-field" id="input-password" placeholder="Password" required><br>
+            <button type="submit" class="signup-button" >Signup</button>
         </form>
-        <button class="login-button">Existing User? Login</button>
+        <button class="login-button" id="button-login">Existing User? Login</button>
+        <div>
+            <label id="label-status"></label>
+        </div>
     </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="./script.js"></script>
 </body>
 </html>
