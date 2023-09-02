@@ -18,6 +18,8 @@ document.getElementById('form-login').addEventListener('submit',async event=>{
         alert("Login Successfull !")
         const token=result.data.token;
         localStorage.setItem('token',token)
+
+        window.location='../Chat/index.html'
             
         
     }
