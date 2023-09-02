@@ -4,19 +4,38 @@ const labelStatus=document.getElementById('status-label')
 
 const baseUrl='http://localhost:3000/'
 
-document.getElementById('form-login').addEventListener('submit',event=>{
+document.getElementById('form-login').addEventListener('submit',async event=>{
+    labelStatus.textContent=''
     event.preventDefault();
     obj={
         email:inputEmail.value,
         password:inputPassword.value
     }
     try{
-       const result= axios.post(baseUrl+'/User/login',obj)
-        console.log(result)
+        const result= await axios.post(baseUrl+'User/login',obj)
+        
+        labelStatus.innerText='Login Successfull!'
+        alert("Login Successfull !")
+        const token=result.data.token;
+        localStorage.setItem('token',token)
+            
         
     }
     catch(err){
         
-        console.log(err)
+        const status=err.response.status
+        labelStatus.style.color='red'
+
+        if(status==401){
+            labelStatus.textContent='Invalid Passsword!'
+
+        }
+        else if(status==404){
+            labelStatus.textContent="User not found!"
+
+        }
+        else{
+            labelStatus.textContent="Something went wrong!"
+        }
     }
 })

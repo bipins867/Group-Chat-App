@@ -18,7 +18,7 @@ exports.postSignUp=async (req,res,next)=>{
         
         if(user){
             
-            return res.status(201).json({message:"User already Exsts"})
+            return res.status(401).json({message:"User already Exsts"})
 
         }
         else
@@ -39,4 +39,42 @@ exports.postSignUp=async (req,res,next)=>{
         res.status(500).json({error:"Something went wrong"})
     }
    
+}
+
+exports.postLogin=async(req,res,next)=>{
+    obj={email:req.body.email,password:req.body.password}
+    try
+    {
+
+        const user=await User.findOne({where:{email:obj.email}})
+
+        if(!user){
+            console.log("USER NOT FOUND")
+            res.status(404).json({error:"User don't Exists"})
+        }
+        else
+        {
+            bcrypt.compare(obj.password,user.password,async(err,response)=>{
+                if(err)
+                    throw new Error("Something went wrong")
+                
+                if(response)
+                {
+                    const token=jwt.sign({name:user.dataValues.name,id:user.dataValues.id},process.env.JWT_SECRET_KEY)
+                    
+                    res.json({status:"Login Successfull",token:token})
+                }
+                    
+                else
+                {
+                    console.log("INVALID PASSWORD")
+                    res.status(401).json({error:"Invalid Password"})
+                }
+            })
+            
+        }
+    }
+    catch(err){
+        console.log(err)
+    }
 }

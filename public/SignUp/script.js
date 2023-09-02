@@ -27,12 +27,7 @@ formSignUp.onsubmit=async event=>{
         
         const status=result.status;
 
-        if(status==201){
-            labelStatus.textContent="User Already Exists!"
-            labelStatus.style.color='red'
-            alert("User Already Exists! Please Login")
-        }
-        else if (status ==200){
+        if (status ==200){
             labelStatus.textContent="Signup Successfull !"
             alert("Successfully Signed Up")
             window.location='../Login/index.html'
@@ -44,7 +39,15 @@ formSignUp.onsubmit=async event=>{
     }
     catch(err){
         labelStatus.style.color='red'
-        labelStatus.textContent="Something went Wrong !"
+        const status=err.response.status;
+        if(status==401){
+            labelStatus.textContent="User Already Exists!"
+            
+            alert("User Already Exists! Please Login")
+        }
+        else{
+            labelStatus.textContent='Something went wrong!'
+        }
     }
     
 }
