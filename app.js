@@ -20,7 +20,10 @@ app=express()
 
 
 
-app.use(cors())
+app.use(cors({
+    origin:'*',
+    methods:['GET','POST']
+}))
 app.use(bodyParser.json({extends:false}))
 
 

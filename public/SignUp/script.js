@@ -29,9 +29,12 @@ formSignUp.onsubmit=async event=>{
 
         if(status==201){
             labelStatus.textContent="User Already Exists!"
+            labelStatus.style.color='red'
+            alert("User Already Exists! Please Login")
         }
         else if (status ==200){
             labelStatus.textContent="Signup Successfull !"
+            alert("Successfully Signed Up")
         }
         else{
             //Not Required
@@ -39,6 +42,7 @@ formSignUp.onsubmit=async event=>{
 
     }
     catch(err){
+        labelStatus.style.color='red'
         labelStatus.textContent="Something went Wrong !"
     }
     
