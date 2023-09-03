@@ -21,11 +21,21 @@ exports.postAddChat=async(req,res,next)=>{
 
 exports.getChats=async(req,res,next)=>{
     const userId=req.user.id;
-    //console.log("USED ID ",userId)
-    const sqlQuery = `select chats.chat,users.name,users.id as userId from chats,users where chats.UserId=users.id`;
+    
+    
     try{
-        const chat=await sequelize.query(sqlQuery,{type:Sequelize.QueryTypes.SELECT})
-        res.json({chat,userId:userId})
+        const chatAr=[]
+
+        const chats=await Chat.findAll()
+        for(const chat of chats){
+            
+            const us=await chat.getUser()
+            
+            const data={chat:chat.chat,userId:chat.UserId,name:us.name}
+            
+            chatAr.push(data)
+        }
+        res.json({chat:chatAr,userId:userId})
     }catch(err){
         console.log(err)
         res.status(401).json({error:"Something went wrong"})

@@ -38,6 +38,34 @@ function addChat(chat,userMe=true){
     
 }
 
+function deleteAllChats(){
+    while(chatList.firstChild){
+        chatList.removeChild(chatList.firstChild)
+    }
+}
+
+async function onPageRefress(){
+    deleteAllChats();
+    const headers=getTokenHeaders()
+    if(!headers)
+    {
+        return;
+    } 
+    const result=await axios.get(baseUrl+'Chat/getChat',{headers})
+    console.log(result)
+    const userId=result.data.userId;
+    for(const chat of result.data.chat){
+        if(chat.userId==userId){
+            addChat(chat.chat)
+        }
+        else{
+            
+            const msg=chat.name+'->'+chat.chat
+            addChat(msg,false)
+        }
+    }
+}
+
 
 buttonLogout.onclick=event=>{
     localStorage.removeItem('token')
@@ -77,22 +105,16 @@ buttonSend.onclick=async event=>{
 }
 
 document.addEventListener('DOMContentLoaded',async event=>{
-    const headers=getTokenHeaders()
-    if(!headers)
-    {
-        return;
-    } 
-    const result=await axios.get(baseUrl+'Chat/getChat',{headers})
-    console.log(result)
-    const userId=result.data.userId;
-    for(const chat of result.data.chat){
-        if(chat.userId==userId){
-            addChat(chat.chat)
-        }
-        else{
-            
-            const msg=chat.name+'->'+chat.chat
-            addChat(msg,false)
-        }
+   
+    async function myFunction(){
+
+        onPageRefress();
+
+        setTimeout(myFunction,1000)
+
+
     }
+
+    myFunction();
+    
 })
