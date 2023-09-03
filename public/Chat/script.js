@@ -59,7 +59,7 @@ buttonSend.onclick=async event=>{
         }    
         
         const result=await axios.post(baseUrl+'Chat/postChat',obj,{headers})
-        console.log(result.data.chat)
+        //console.log(result.data.chat)
         addChat(result.data.chat)
 
     }catch(err){
@@ -75,3 +75,24 @@ buttonSend.onclick=async event=>{
 
     inputMessage.value=''
 }
+
+document.addEventListener('DOMContentLoaded',async event=>{
+    const headers=getTokenHeaders()
+    if(!headers)
+    {
+        return;
+    } 
+    const result=await axios.get(baseUrl+'Chat/getChat',{headers})
+    console.log(result)
+    const userId=result.data.userId;
+    for(const chat of result.data.chat){
+        if(chat.userId==userId){
+            addChat(chat.chat)
+        }
+        else{
+            
+            const msg=chat.name+'->'+chat.chat
+            addChat(msg,false)
+        }
+    }
+})

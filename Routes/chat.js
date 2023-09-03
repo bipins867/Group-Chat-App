@@ -7,7 +7,7 @@ const router=express.Router()
 
 
 router.post("/postChat",userAuth.authenticate,chatCont.postAddChat)
-//router.post("/getChat",userAuth.authenticate,chatCont.getChats)
+router.get("/getChat",userAuth.authenticate,chatCont.getChats)
 
 
 
