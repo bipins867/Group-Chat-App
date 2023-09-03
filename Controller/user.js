@@ -49,7 +49,7 @@ exports.postLogin=async(req,res,next)=>{
         const user=await User.findOne({where:{email:obj.email}})
 
         if(!user){
-            console.log("USER NOT FOUND")
+            //console.log("USER NOT FOUND")
             res.status(404).json({error:"User don't Exists"})
         }
         else
@@ -67,7 +67,7 @@ exports.postLogin=async(req,res,next)=>{
                     
                 else
                 {
-                    console.log("INVALID PASSWORD")
+                    //console.log("INVALID PASSWORD")
                     res.status(401).json({error:"Invalid Password"})
                 }
             })

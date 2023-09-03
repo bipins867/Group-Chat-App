@@ -11,6 +11,11 @@ const fs=require('fs')
 
 const db=require('./database')
 const userRoutes=require('./Routes/user')
+const chatRoutes=require('./Routes/chat')
+
+
+const User=require('./Models/User')
+const Chat=require('./Models/Chat')
 
 
 
@@ -29,7 +34,7 @@ app.use(bodyParser.json({extends:false}))
 
 
 app.use('/User',userRoutes)
-
+app.use('/Chat',chatRoutes)
 
 
 
@@ -38,7 +43,10 @@ app.use((req, res) => {
     res.sendFile(path.join(__dirname, `public/${req.url}`));
 })
 
-db.sync({alter:true})
+User.hasMany(Chat)
+Chat.belongsTo(User)
+
+db.sync()
 .then(()=>{
     
 app.listen(process.env.APP_PORT)

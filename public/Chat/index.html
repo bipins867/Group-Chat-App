@@ -8,22 +8,23 @@
 </head>
 <body>
     <header>
-        <h1 style="font-size: 24px;">Chat App</h1>
+        <h1>Chat App</h1>
+        <button class="logout-button" id="button-logout">Logout</button>
     </header>
     <main>
-        <div class="message-container">
+        <div class="message-container" id="chat-container">
+             <!--
             <div class="message odd">Hello! This is an example message. It should wrap if it's too long.</div>
             <div class="message even">Hi there!</div>
             <div class="message odd">How are you?</div>
             <div class="message even">I'm good, thanks!</div>
-            <!-- Add more chat messages here -->
+            Add more chat messages here -->
         </div>
     </main>
     <footer>
-        <input type="text" placeholder="Type your message">
-        <button>Send</button>
+        <input type="text" id="input-message" placeholder="Type your message" required>
+        <button id="button-send">Send</button>
     </footer>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     
     <script src="./script.js"></script>
