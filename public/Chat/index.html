@@ -11,6 +11,32 @@
         <h1>Chat App</h1>
         <button class="logout-button" id="button-logout">Logout</button>
     </header>
+    <div class="list-container">
+        <ul id="list-group" class="horizontal-list">
+            <li><button class="global-button" id="button-global-chat">Global Chat</button></li>
+            <li><button class="create-button" id="button-create-group">Create Group</button></li>
+            <li><button class="create-button" id="button-join-group">Join Group</button></li>
+            <!--
+            <li><button class="custom-button">Item 1</button></li>
+             Add more items as needed -->
+        </ul>
+        
+        
+    </div>
+    <div class="link-container">
+        <input type="text" value="" id="inputLink" readonly>
+        <button class="custom-button" id="button-copy-link">Copy Group Joining UID</button>
+    </div>
+    <div class="link-container">
+        <label id="label-status" style="color: red;"></label>
+   
+        
+    </div>
+    <div class="link-container">
+        <label id="label-group-name" style="background-color: rgb(185, 183, 183);"><b>Group Name</b></label>
+   
+        
+    </div>
     <main>
         <div class="message-container" id="chat-container">
              <!--

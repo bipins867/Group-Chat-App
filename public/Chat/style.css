@@ -1,3 +1,73 @@
+/* Add this CSS to display the list horizontally */
+.custom-button {
+    background-color: #007bff; /* Specify the background color you want */
+    color: #fff; /* Text color */
+    border: none;
+    padding: 10px;
+    margin: 2px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.custom-button:hover {
+    background-color: #0056b3; /* Button background color on hover */
+}
+
+.create-button {
+    background-color: #4b4b4b; /* Specify the background color you want */
+    color: #fff; /* Text color */
+    border: none;
+    padding: 10px;
+    margin: 2px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.create-button:hover {
+    background-color: #2f363d; /* Button background color on hover */
+}
+
+.global-button {
+    background-color: #853131; /* Specify the background color you want */
+    color: #fff; /* Text color */
+    border: none;
+    padding: 10px;
+    margin: 2px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.global-button:hover {
+    background-color: #7c4d31; /* Button background color on hover */
+}
+
+.link-container{
+    display: flex;
+    justify-content: center;
+    padding: 5px;
+}
+
+.list-container {
+    display: flex;
+    justify-content: center;
+    padding: 5px; /* Center the content horizontally */
+}
+
+.horizontal-list {
+    list-style-type: none;
+    padding: 5px;
+    margin: 0;
+    display: flex; /* Use flexbox to arrange items horizontally */
+}
+
+.horizontal-list li {
+    margin-right: 10px; /* Add spacing between items */
+}
+
+/* Optional: Remove margin from the last item */
+.horizontal-list li:last-child {
+    margin-right: 0;
+}
 
 body {
     font-family: Arial, sans-serif;

@@ -5,11 +5,23 @@ const chatList=document.getElementById('chat-container')
 const buttonSend=document.getElementById('button-send')
 const inputMessage=document.getElementById('input-message')
 
+
+const groupLists=document.getElementById('list-group')
+const inputLink=document.getElementById('inputLink')
+const buttonCopyLink=document.getElementById('button-copy-link')
+const buttonGlobalChat=document.getElementById('button-global-chat')
+const buttonCreateGroup=document.getElementById('button-create-group')
+const buttonJoinGroup=document.getElementById('button-join-group')
+const labelGroupName=document.getElementById('label-group-name')
+const labelStatus=document.getElementById('label-status')
+
+
+
 const myMessageClass='message even'
 const otherMessageClass='message odd'
 
 const baseUrl='http://localhost:3000/'
-const OBJ={firstTime:false}
+const OBJ={firstTime:false,id2Get:-1}
 
 
 
@@ -49,7 +61,7 @@ function deleteAllChats(){
 
 function fetchLocalChats(){
     let data=localStorage.getItem('localChats')
-
+    //console.log("ShowingDAta",data)
     if(!data){
         data=[]
     }
@@ -60,6 +72,7 @@ function fetchLocalChats(){
 }
 
 function saveChat2Local(chats){
+    
     const localChat=fetchLocalChats()
     var x=[localChat,chats]
     
@@ -83,9 +96,18 @@ async function onPageRefress(){
     if(!lastChatIndex){
         lastChatIndex=-1
     }
-    const result=await axios.get(baseUrl+`Chat/getChat?lastChatId=${lastChatIndex}`,{headers})
+    let result;
+    if(OBJ.id2Get==-1){
+        
+        result=await axios.get(baseUrl+`Chat/getChat?lastChatId=${lastChatIndex}`,{headers})
     
-    if(result.length==0){
+    }
+    else{
+        result=await axios.get(baseUrl+`Group/getChat/${OBJ.id2Get}?lastChatId=${lastChatIndex}`,{headers})
+    
+    }
+    
+    if(result.data.chat.length==0){
         return;
     }
     const chatListData=result.data.chat;
@@ -107,20 +129,21 @@ async function onPageRefress(){
         }
         else{
             
-            const msg=chat.name+'->'+chat.chat
+            const msg=chat.userName+'->'+chat.chat
             addChat(msg,false)
         }
     }
 }
 async function showChatFromLocal(userId){
     const chats=fetchLocalChats();
+    
     for(const chat of chats){
         if(chat.userId==userId){
             addChat(chat.chat)
         }
         else{
             
-            const msg=chat.name+'->'+chat.chat
+            const msg=chat.userName+'->'+chat.chat
             addChat(msg,false)
         } 
     }
@@ -133,6 +156,21 @@ buttonLogout.onclick=event=>{
 }
 
 
+buttonCopyLink.onclick=async event=>{
+    try{
+        inputLink.select()
+        const successful = document.execCommand('copy');
+        
+        if (successful) {
+            console.log('Text copied to clipboard');
+        } else {
+            console.error('Unable to copy text to clipboard');
+        }
+    }
+    catch(err){
+        console.log(err)
+    }
+}
 
 buttonSend.onclick=async event=>{
     try{
@@ -145,8 +183,13 @@ buttonSend.onclick=async event=>{
         {
             return;
         }    
+        if(OBJ.id2Get==-1){
+            const result=await axios.post(baseUrl+'Chat/postChat',obj,{headers})
+        }
+        else{
+            const result=await axios.post(baseUrl+`Group/postChat/${OBJ.id2Get}`,obj,{headers})
+        }
         
-        const result=await axios.post(baseUrl+'Chat/postChat',obj,{headers})
         //console.log(result.data.chat)
         //addChat(result.data.chat)
 
@@ -164,8 +207,130 @@ buttonSend.onclick=async event=>{
     inputMessage.value=''
 }
 
-document.addEventListener('DOMContentLoaded',async event=>{
+
+
+buttonCreateGroup.onclick=async event=>{
+    const headers=getTokenHeaders()
+    if(!headers)
+    {
+        return;
+    } 
+    
+    const groupName=prompt("Enter the group Name")
+
+    if(!groupName){
+        return;
+    }
+    obj={groupName:groupName}
+    try{
+        const result=await axios.post(baseUrl+'Group/createGroup',obj,{headers})
+        
+        const groupDetails=result.data
+        deleteAllChats();
+        onChangeSettings(groupDetails.groupId,groupDetails.groupName,groupDetails.groupUID)
+        addGroup2GroupLists(groupDetails)
+    }
+    catch(err){
+        console.log(err)
+    }
+
    
+}
+buttonJoinGroup.onclick=async evnet=>{
+    const headers=getTokenHeaders()
+    if(!headers)
+    {
+        return;
+    } 
+    
+    const groupUID=prompt("Enter the group UID")
+
+    if(!groupUID){
+        return;
+    }
+    
+    try{
+        const result=await axios.get(baseUrl+`Group/addGroup/${groupUID}`,{headers})
+
+        
+        if(result.status==201){
+            labelStatus.textContent="Already the Member of the Group"
+            
+            return;
+        }
+
+        const groupDetails=result.data
+        deleteAllChats();
+        onChangeSettings(groupDetails.groupId,groupDetails.groupName,groupDetails.groupUID)
+        addGroup2GroupLists(groupDetails)
+    }
+    catch(err){
+        console.log(err)
+    }
+}
+
+buttonGlobalChat.onclick=async evnet=>{
+    deleteAllChats();
+    onChangeSettings(-1,"Global Chat","")
+}
+
+function onChangeSettings(id2Get,groupName,groupUID){
+    OBJ.id2Get=id2Get
+    OBJ.firstTime=false
+        
+    labelGroupName.innerHTML=`<b>${groupName}</b>`
+    localStorage.removeItem('lastChatId')
+    localStorage.removeItem('localChats')
+    const url=groupUID
+
+    inputLink.value=url;
+
+}
+
+
+function addGroup2GroupLists(group){
+    
+    const button=document.createElement('button')
+    button.className='custom-button'
+
+
+    button.textContent=group.groupName
+
+    button.onclick=event=>{
+       onChangeSettings(group.id,group.groupName,group.groupUID)
+       deleteAllChats();
+
+    }
+    groupLists.appendChild(button)
+
+}
+async function defaultPageRefress(){
+    
+    const headers=getTokenHeaders()
+    if(!headers)
+    {
+        return;
+    } 
+
+    try{
+        const result=await axios.get(baseUrl+'Group/getGroups',{headers})
+        
+        //onPageRefress();
+        for(const group of result.data){
+            addGroup2GroupLists(group)
+        }
+    }
+    catch(err){
+
+    }
+        
+
+    
+        
+}
+document.addEventListener('DOMContentLoaded',async event=>{
+    defaultPageRefress()
+    onChangeSettings(-1,"Global","")
     async function myFunction(){
 
         onPageRefress();

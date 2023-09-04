@@ -10,7 +10,7 @@ exports.postAddChat=async(req,res,next)=>{
     try{
         const result=await req.user.createChat({chat:chat})
 
-        res.json(result)
+        res.json({message:"Message Sent"})
     }
     catch(err){
         console.log(err)
@@ -42,7 +42,7 @@ exports.getChats=async(req,res,next)=>{
             
             const us=await chat.getUser()
             
-            const data={id:chat.id,chat:chat.chat,userId:chat.UserId,name:us.name}
+            const data={id:chat.id,chat:chat.chat,userId:chat.UserId,userName:us.name}
             
             chatAr.push(data)
         }

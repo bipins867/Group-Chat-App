@@ -10,6 +10,7 @@ exports.authenticate=async (req,res,next)=>{
         const user=await User.findByPk(payload.id)
         
         req.user=user;
+        
         next();
         
         
