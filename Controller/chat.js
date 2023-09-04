@@ -21,17 +21,28 @@ exports.postAddChat=async(req,res,next)=>{
 
 exports.getChats=async(req,res,next)=>{
     const userId=req.user.id;
+    const lastChatId=req.query.lastChatId
     
     
     try{
+
+        if(!lastChatId){
+            throw new Error("SOMEHITNG WENT WRONG")
+        }
+        
+        
         const chatAr=[]
 
-        const chats=await Chat.findAll()
+        const chats=await Chat.findAll({where:{
+            id:{
+                [Sequelize.Op.gt]:lastChatId
+            }
+        }})
         for(const chat of chats){
             
             const us=await chat.getUser()
             
-            const data={chat:chat.chat,userId:chat.UserId,name:us.name}
+            const data={id:chat.id,chat:chat.chat,userId:chat.UserId,name:us.name}
             
             chatAr.push(data)
         }
