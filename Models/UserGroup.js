@@ -8,6 +8,6 @@ module.exports=sequelize.define('Usergroup',{
         autoIncrement:true,
     },
     
-    
+    memberType:Sequelize.STRING
     
 })

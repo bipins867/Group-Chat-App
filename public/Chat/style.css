@@ -1,4 +1,31 @@
 /* Add this CSS to display the list horizontally */
+.join-button {
+    background-color: #0b9c24; /* Specify the background color you want */
+    color: #fff; /* Text color */
+    border: none;
+    padding: 10px;
+    margin: 2px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.join-button:hover {
+    background-color: #48b167; /* Button background color on hover */
+}
+.edit-button {
+    background-color: #6a7720; /* Specify the background color you want */
+    color: #fff; /* Text color */
+    border: none;
+    padding: 10px;
+    margin: 2px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.edit-button:hover {
+    background-color: #c9ccaf; /* Button background color on hover */
+}
+
 .custom-button {
     background-color: #007bff; /* Specify the background color you want */
     color: #fff; /* Text color */

@@ -14,6 +14,7 @@ const buttonCreateGroup=document.getElementById('button-create-group')
 const buttonJoinGroup=document.getElementById('button-join-group')
 const labelGroupName=document.getElementById('label-group-name')
 const labelStatus=document.getElementById('label-status')
+const buttonEditGroup=document.getElementById('button-edit-group')
 
 
 
@@ -250,6 +251,7 @@ buttonJoinGroup.onclick=async evnet=>{
     }
     
     try{
+        
         const result=await axios.get(baseUrl+`Group/addGroup/${groupUID}`,{headers})
 
         
@@ -272,8 +274,11 @@ buttonJoinGroup.onclick=async evnet=>{
 buttonGlobalChat.onclick=async evnet=>{
     deleteAllChats();
     onChangeSettings(-1,"Global Chat","")
+    buttonEditGroup.style.display='none';
 }
-
+buttonEditGroup.onclick=async event=>{
+    window.location='../Group/index.html'
+}
 function onChangeSettings(id2Get,groupName,groupUID){
     OBJ.id2Get=id2Get
     OBJ.firstTime=false
@@ -297,6 +302,13 @@ function addGroup2GroupLists(group){
     button.textContent=group.groupName
 
     button.onclick=event=>{
+       buttonEditGroup.style.display='block'
+       
+       localStorage.setItem('groupId',group.groupId)
+       
+       
+
+       localStorage.setItem('groupName',group.groupName)
        onChangeSettings(group.id,group.groupName,group.groupUID)
        deleteAllChats();
 
@@ -317,6 +329,7 @@ async function defaultPageRefress(){
         
         //onPageRefress();
         for(const group of result.data){
+            group.groupId=group.id;
             addGroup2GroupLists(group)
         }
     }

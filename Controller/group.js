@@ -13,9 +13,14 @@ exports.postCreateGroup=async(req,res,next)=>{
         const groupUID=uuid.v4();
         //console.log(req.user)
         let obj={groupName:groupName,createdBy:req.user.id,groupUID:groupUID}
-        const group=await req.user.createGroup(obj,{transaction:transaction})
         
-        
+        const group=await Group.create(obj,{transaction:transaction})
+        await group.addUser(req.user.id,{
+            through:{
+                memberType:"admin"
+            },
+            transaction:transaction
+        })
 
         transaction.commit()
 
@@ -44,7 +49,11 @@ exports.getAddGroup=async(req,res,next)=>{
             res.status(201).json({message:"User is already the member of group"})
         }
         else{
-            const result=await group.addUser(req.user.id)
+            const result=await group.addUser(req.user.id,{
+                through:{
+                    memberType:"member"
+                },
+            })
             
             res.json({groupId:group.id,userId:req.user.id,groupUID:groupUID,groupName:group.groupName})
         }
@@ -110,9 +119,71 @@ exports.getGroups=async(req,res,next)=>{
     try{
        
         const result=await req.user.getGroups()
+        
         res.json(result)
     }
     catch(err){
         console.log(err)
+    }
+}
+
+exports.getGroupMembers=async(req,res,next)=>{
+    const groupId=req.params.groupId;
+    console.log("SOME ERROR MAY BE",groupId)
+    try{
+        const userAr=[]
+        const users=await UserGroup.findAll({where:{GroupId:groupId}})
+        //console.log(users)
+        for(const user of users){
+            const newUser=await User.findByPk(user.UserId)
+            const obj={userId:newUser.id,userName:newUser.name,memberType:user.memberType}
+            userAr.push(obj)
+        }
+
+        res.json({users:userAr,groupId:groupId})
+    }
+    catch(err){
+        console.log(err);
+        res.status(402).json({error:"Something went wrong"})
+    }
+}
+
+exports.removeMembersFromGroup=async(req,res,next)=>{
+    const groupId=req.params.groupId;
+    const userId=req.params.userId;
+
+    try{
+        
+        const result=await UserGroup.destroy({where:{
+            GroupId:groupId,
+            UserId:userId
+        }})
+        
+        res.json({message:'Successfully Removed From Group'})
+    }
+    catch(err){
+        console.log(err)
+        res.status(405).json({error:"Something went wrong"})
+    }
+}
+
+exports.updateGroupMemberType=async(req,res,next)=>{
+    const groupId=req.params.groupId;
+    const memberType=req.params.memberType;
+    const userId=req.params.userId;
+
+    try{
+        
+        obj={memberType:memberType}
+        const result=await UserGroup.update(obj,{where:{
+            GroupId:groupId,
+            UserId:userId
+        }})
+        
+        res.json(result)
+    }
+    catch(err){
+        console.log(err)
+        res.status(405).json({error:"Something went wrong"})
     }
 }
