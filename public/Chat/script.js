@@ -21,7 +21,7 @@ const buttonEditGroup=document.getElementById('button-edit-group')
 const myMessageClass='message even'
 const otherMessageClass='message odd'
 
-const baseUrl='http://localhost:3000/'
+const baseUrl='http://13.53.33.124:3000/'
 const OBJ={firstTime:false,id2Get:-1}
 
 
