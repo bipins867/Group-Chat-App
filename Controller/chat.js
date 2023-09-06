@@ -11,7 +11,7 @@ exports.postAddChat=async(req,res,next)=>{
     try{
         const result=await req.user.createChat({chat:chat})
 
-        serverSocket.io.to('global-chats').emit('Recieved',chat,'global-chats',req.user.id)
+        serverSocket.io.to('global-chats').emit('Recieved',chat,'global-chats',req.user.id,req.user.name)
         res.json({message:"Message Sent"})
 
         

@@ -79,7 +79,7 @@ exports.postAddChat=async(req,res,next)=>{
         const result=await group.createGroupchat(obj)
         const groupdId=group.groupUID
         console.log(groupId)
-        serverSocket.io.to(groupdId).emit('Recieved',chat,groupdId,req.user.id)
+        serverSocket.io.to(groupdId).emit('Recieved',chat,groupdId,req.user.id,req,user.name)
         res.json({message:"Message Sent"})
 
     }

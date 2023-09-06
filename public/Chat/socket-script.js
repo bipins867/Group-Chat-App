@@ -10,7 +10,7 @@ socket.on('disconnect',()=>{
     console.log(`Disconnected from the Server - ${socketUrl}`)
 })
 
-socket.on('Recieved',(message,groupUID,userId)=>{
+socket.on('Recieved',(message,groupUID,userId,userName)=>{
     const localUserId=localStorage.getItem('userId')
     //console.log(localUserId,userId)
     if(chatList.children.length>=10 ){
@@ -20,7 +20,8 @@ socket.on('Recieved',(message,groupUID,userId)=>{
         addChat(message)
     }
     else{
-        addChat(message,false)
+        const nmessage=userName+'->'+message
+        addChat(nmessage,false)
     }
     //console.log(`Message recieved from ${groupUID} and message - ${message}`)
 })
