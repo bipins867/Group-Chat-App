@@ -141,8 +141,8 @@ main {
     align-items: center;
     justify-content: center;
     padding: 20px;
-    width: 30%;
-    max-width: 80%; /* 50% of the viewport width */
+    width: 80%;
+    max-width: 90%; /* 50% of the viewport width */
     margin: 0 auto; /* Center horizontally */
     overflow-y: auto; /* Enable scrolling for the chat messages */
     background-color: aqua; /* Background color for the main content area */
