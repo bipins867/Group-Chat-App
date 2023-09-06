@@ -9,6 +9,10 @@ module.exports=sequelize.define('Groupchat',{
     },
     chat:Sequelize.STRING,
     userId:Sequelize.INTEGER,
-    userName:Sequelize.STRING
+    userName:Sequelize.STRING,
+    isFile:{
+        type:Sequelize.BOOLEAN,
+        defaultValue:0
+    }
     
 })

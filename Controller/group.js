@@ -6,7 +6,7 @@ const Group=require('../Models/Group')
 const User=require('../Models/User')
 const Sequelize=require('sequelize')
 const serverSocket=require('../Server-Socket/server')
-
+const awsServer=require('../Utils/awsServer')
 
 
 exports.postCreateGroup=async(req,res,next)=>{
@@ -79,7 +79,7 @@ exports.postAddChat=async(req,res,next)=>{
         const result=await group.createGroupchat(obj)
         const groupdId=group.groupUID
         console.log(groupId)
-        serverSocket.io.to(groupdId).emit('Recieved',chat,groupdId,req.user.id,req,user.name)
+        serverSocket.io.to(groupdId).emit('Recieved',chat,groupdId,req.user.id,req.user.name)
         res.json({message:"Message Sent"})
 
     }
@@ -87,6 +87,33 @@ exports.postAddChat=async(req,res,next)=>{
         console.log(err)
         res.status(404).json({error:"Something went wrong"})
     }
+}
+
+
+exports.postAddFile=async(req,res,next)=>{
+    const file=req.files[0];
+    const groupId=req.params.groupId;
+    try{
+        res.json({message:"File Sent"})
+        const fileContent=file.buffer.toString()
+        const ctime=new Date().getTime()
+        const fileName=ctime+'-'+file.originalname;
+        const awsResponse=await awsServer.upload2S3(fileContent,fileName)
+        const fileUrl=awsResponse.Location;
+        const group=await Group.findOne({where:{id:groupId}})
+        obj={chat:fileUrl,userId:req.user.id,userName:req.user.name,isFile:1}
+        const result=await group.createGroupchat(obj)
+        const groupdId=group.groupUID
+        
+        
+        serverSocket.io.to(groupdId).emit('RecievedFile',fileUrl,groupdId,req.user.id,req.user.name,true)
+        
+    }
+    catch(err){
+        console.log(err)
+        res.status(405).json({error:"Something went wrong !"})
+    }
+    
 }
 
 exports.getChats=async(req,res,next)=>{

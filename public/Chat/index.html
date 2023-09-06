@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat App</title>
     <link rel="stylesheet" href="./style.css">
-    <script src="http://13.50.8.165:3030/socket.io/socket.io.js" defer></script>
+    <script src="http://localhost:3030/socket.io/socket.io.js" defer></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
     <script src="./socket-script.js" defer></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -54,9 +54,18 @@
             Add more chat messages here -->
         </div>
     </main>
+    <div class="link-container">
+        <label id="file-label-status" style="background-color: rgb(206, 206, 206); display: none;"><b>File Selected</b></label>
+   
+        
+    </div>
     <footer>
         <input type="text" id="input-message" placeholder="Type your message" required>
         <button id="button-send">Send</button>
+        
+        <input type="file" id="fileInput" class="input-file">
+        <label for="fileInput" class="custom-button">Choose File</label>
+        <button id="button-send-file">Send File</button>
     </footer>
     
 </body>

@@ -196,4 +196,40 @@ button {
     border-radius: 5px;
     padding: 10px 20px;
     cursor: pointer;
+    margin: 2px;
+}
+
+/*----*/
+
+/* Style the custom file input container */
+.custom-file-input {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+}
+
+/* Style the actual file input */
+.input-file {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+}
+
+/* Style the custom button or label */
+.custom-button {
+    background-color: #3498db;
+    color: #fff;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+/* Optional: Add hover and active styles */
+.custom-button:hover {
+    background-color: #2980b9;
+}
+
+.custom-button:active {
+    background-color: #1c6ca2;
 }

@@ -15,13 +15,14 @@ const buttonJoinGroup=document.getElementById('button-join-group')
 const labelGroupName=document.getElementById('label-group-name')
 const labelStatus=document.getElementById('label-status')
 const buttonEditGroup=document.getElementById('button-edit-group')
-
-
+const inputSelectFile=document.getElementById('fileInput')
+const buttonSendFile=document.getElementById('button-send-file')
+const labelFileStatus=document.getElementById('file-label-status')
 
 const myMessageClass='message even'
 const otherMessageClass='message odd'
 
-const baseUrl='http://13.50.8.165:3000/'
+const baseUrl='http://localhost:3000/'
 const OBJ={firstTime:false,id2Get:-1}
 
 
@@ -37,7 +38,7 @@ function getTokenHeaders(){
     return headers
 }
 
-function addChat(chat,userMe=true){
+function addChat(chat,userMe=true,isLink=false,sender){
 
     const div=document.createElement('div')
     
@@ -47,8 +48,18 @@ function addChat(chat,userMe=true){
     else{
         div.className=otherMessageClass
     }
-
-    div.textContent=chat;
+    if(isLink){
+        if(userMe){
+            div.innerHTML=`<a href="${chat}">${chat}</a>`
+        }
+        else{
+            div.innerHTML=`${sender}-><a href="${chat}">${chat}</a>`
+        }   
+    }
+    else{
+        div.textContent=chat;
+    }
+    
 
     chatList.appendChild(div)
     
@@ -109,6 +120,7 @@ async function onPageRefress(groupUID){
         result=await axios.get(baseUrl+`Group/getChat/${OBJ.id2Get}?lastChatId=${lastChatIndex}`,{headers})
     
     }
+    //console.log(result)
     socket.emit('join-group',groupUID)
     localStorage.setItem('prevGroupId',groupUID)
     if(result.data.chat.length==0){
@@ -130,12 +142,25 @@ async function onPageRefress(groupUID){
             chatList.removeChild(chatList.children[0])
         }
         if(chat.userId==userId){
-            addChat(chat.chat)
+            if(chat.isFile)
+            {
+                addChat(chat.chat,true,true)
+            }
+            else{
+                addChat(chat.chat,true)
+            }
+            
         }
         else{
+            if(chat.isFile){
+                addChat(chat.chat,true,true,userName)
+
+            }
+            else{
+                const msg=chat.userName+'->'+chat.chat
+                addChat(msg,false)
+            }
             
-            const msg=chat.userName+'->'+chat.chat
-            addChat(msg,false)
         }
     }
 }
@@ -188,7 +213,8 @@ buttonSend.onclick=async event=>{
         if(!headers)
         {
             return;
-        }    
+        }
+        
         if(OBJ.id2Get==-1){
             const result=await axios.post(baseUrl+'Chat/postChat',obj,{headers})
         }
@@ -212,8 +238,65 @@ buttonSend.onclick=async event=>{
 
     inputMessage.value=''
 }
+inputSelectFile.onchange=event=>{
+    if(inputSelectFile.value===''){
+        labelFileStatus.style.display='none'
+        return;
+    }
+    labelFileStatus.style.display='block'
+    labelFileStatus.textContent='File is selected'
+    
+}
 
+buttonSendFile.onclick=async event=>{
+    try{
+        if(inputSelectFile.files.length===0)
+        {   
+            labelFileStatus.style.display='block'
+            labelFileStatus.textContent='No file is selected'
+            return;
+        }
+        const headers=getTokenHeaders()
+        if(!headers)
+        {
+            return;
+        }   
+        headers['Content-Type']= 'multipart/form-data'    
+        
+        let url;
+        if(OBJ.id2Get==-1){
+            url=baseUrl+'Chat/postFile'
+        }
+        else{
+            url=baseUrl+`Group/postFile/${OBJ.id2Get}`
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+        const result=await axios.post(url,formData,{headers})
+        console.log(result)
+        //console.log(result.data.chat)
+        //addChat(result.data.chat)
 
+    }catch(err){
+        if(err.response)
+        {
+            console.log(err.response)
+        }
+        else{
+            console.log(err)
+        }
+            
+    } 
+    inputSelectFile.value='';
+}
 
 buttonCreateGroup.onclick=async event=>{
     const headers=getTokenHeaders()

@@ -64,7 +64,7 @@ Group.hasMany(GroupMessage)
 GroupMessage.belongsTo(Group)
 
 
-db.sync()
+db.sync({alter:true})
 .then(()=>{
     
 app.listen(process.env.APP_PORT)

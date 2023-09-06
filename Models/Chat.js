@@ -8,5 +8,9 @@ module.exports=sequelize.define('Chat',{
         autoIncrement:true,
     },
     
-    chat:Sequelize.STRING
+    chat:Sequelize.STRING,
+    isFile:{
+        type:Sequelize.BOOLEAN,
+        defaultValue:0
+    }
 })
