@@ -86,9 +86,11 @@ function saveChat2Local(chats){
 
 }
 
-async function onPageRefress(){
+async function onPageRefress(groupUID){
     //deleteAllChats();
+    socket.emit('leave-group',localStorage.getItem('prevGroupId'))
     const headers=getTokenHeaders()
+
     if(!headers)
     {
         return;
@@ -107,8 +109,10 @@ async function onPageRefress(){
         result=await axios.get(baseUrl+`Group/getChat/${OBJ.id2Get}?lastChatId=${lastChatIndex}`,{headers})
     
     }
-    
+    socket.emit('join-group',groupUID)
+    localStorage.setItem('prevGroupId',groupUID)
     if(result.data.chat.length==0){
+        
         return;
     }
     const chatListData=result.data.chat;
@@ -153,6 +157,7 @@ async function showChatFromLocal(userId){
 
 buttonLogout.onclick=event=>{
     localStorage.removeItem('token')
+    localStorage.removeItem('userId')
     window.location='../Login/index.html'
 }
 
@@ -230,6 +235,7 @@ buttonCreateGroup.onclick=async event=>{
         deleteAllChats();
         onChangeSettings(groupDetails.groupId,groupDetails.groupName,groupDetails.groupUID)
         addGroup2GroupLists(groupDetails)
+        onPageRefress(groupDetails.groupUID)
     }
     catch(err){
         console.log(err)
@@ -265,6 +271,7 @@ buttonJoinGroup.onclick=async evnet=>{
         deleteAllChats();
         onChangeSettings(groupDetails.groupId,groupDetails.groupName,groupDetails.groupUID)
         addGroup2GroupLists(groupDetails)
+        onPageRefress(groupDetails.groupUID)
     }
     catch(err){
         console.log(err)
@@ -275,6 +282,9 @@ buttonGlobalChat.onclick=async evnet=>{
     deleteAllChats();
     onChangeSettings(-1,"Global Chat","")
     buttonEditGroup.style.display='none';
+    
+    onPageRefress('global-chats')
+    
 }
 buttonEditGroup.onclick=async event=>{
     window.location='../Group/index.html'
@@ -311,6 +321,8 @@ function addGroup2GroupLists(group){
        localStorage.setItem('groupName',group.groupName)
        onChangeSettings(group.id,group.groupName,group.groupUID)
        deleteAllChats();
+       onPageRefress(group.groupUID)
+       
 
     }
     groupLists.appendChild(button)
@@ -344,15 +356,19 @@ async function defaultPageRefress(){
 document.addEventListener('DOMContentLoaded',async event=>{
     defaultPageRefress()
     onChangeSettings(-1,"Global","")
-    async function myFunction(){
+    localStorage.setItem('prevGroupId','global-chats')
+    onPageRefress('global-chats');
+    
+    //socket.emit('join-group','global-chats')
+    // async function myFunction(){
 
-        onPageRefress();
+    //     onPageRefress();
 
-        setTimeout(myFunction,1000)
+    //     setTimeout(myFunction,1000)
 
 
-    }
+    // }
 
-    myFunction();
+    // myFunction();
     
 })

@@ -3,14 +3,18 @@ const User=require('../Models/User')
 const Chat=require('../Models/Chat')
 const sequelize = require('../database');
 const Sequelize=require('sequelize');
-const { use } = require('../Routes/chat');
+const serverSocket=require('../Server-Socket/server')
+
 
 exports.postAddChat=async(req,res,next)=>{
     const chat=req.body.chat;
     try{
         const result=await req.user.createChat({chat:chat})
 
+        serverSocket.io.to('global-chats').emit('Recieved',chat,'global-chats',req.user.id)
         res.json({message:"Message Sent"})
+
+        
     }
     catch(err){
         console.log(err)

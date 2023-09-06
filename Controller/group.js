@@ -5,6 +5,9 @@ const UserGroup=require('../Models/UserGroup')
 const Group=require('../Models/Group')
 const User=require('../Models/User')
 const Sequelize=require('sequelize')
+const serverSocket=require('../Server-Socket/server')
+
+
 
 exports.postCreateGroup=async(req,res,next)=>{
     const groupName=req.body.groupName
@@ -74,7 +77,9 @@ exports.postAddChat=async(req,res,next)=>{
         const group=await Group.findOne({where:{id:groupId}})
         obj={chat:chat,userId:req.user.id,userName:req.user.name}
         const result=await group.createGroupchat(obj)
-
+        const groupdId=group.groupUID
+        console.log(groupId)
+        serverSocket.io.to(groupdId).emit('Recieved',chat,groupdId,req.user.id)
         res.json({message:"Message Sent"})
 
     }
@@ -114,11 +119,12 @@ exports.getChats=async(req,res,next)=>{
 }
 
 exports.getGroups=async(req,res,next)=>{
-
+    
    
     try{
        
         const result=await req.user.getGroups()
+        
         
         res.json(result)
     }
@@ -129,7 +135,8 @@ exports.getGroups=async(req,res,next)=>{
 
 exports.getGroupMembers=async(req,res,next)=>{
     const groupId=req.params.groupId;
-    console.log("SOME ERROR MAY BE",groupId)
+    
+    //console.log("SOME ERROR MAY BE",groupId)
     try{
         const userAr=[]
         const users=await UserGroup.findAll({where:{GroupId:groupId}})

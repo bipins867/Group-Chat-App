@@ -18,6 +18,7 @@ document.getElementById('form-login').addEventListener('submit',async event=>{
         alert("Login Successfull !")
         const token=result.data.token;
         localStorage.setItem('token',token)
+        localStorage.setItem('userId',result.data.userId)
 
         window.location='../Chat/index.html'
             
