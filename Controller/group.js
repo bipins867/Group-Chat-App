@@ -94,8 +94,8 @@ exports.postAddFile=async(req,res,next)=>{
     const file=req.files[0];
     const groupId=req.params.groupId;
     try{
-        res.json({message:"File Sent"})
-        const fileContent=file.buffer.toString()
+        
+        const fileContent=file.buffer
         const ctime=new Date().getTime()
         const fileName=ctime+'-'+file.originalname;
         const awsResponse=await awsServer.upload2S3(fileContent,fileName)
@@ -105,7 +105,7 @@ exports.postAddFile=async(req,res,next)=>{
         const result=await group.createGroupchat(obj)
         const groupdId=group.groupUID
         
-        
+        res.json({message:"File Sent"})
         serverSocket.io.to(groupdId).emit('RecievedFile',fileUrl,groupdId,req.user.id,req.user.name,true)
         
     }

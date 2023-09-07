@@ -152,8 +152,11 @@ async function onPageRefress(groupUID){
             
         }
         else{
-            if(chat.isFile){
-                addChat(chat.chat,true,true,userName)
+            if(chat.isFile){    
+                
+                
+                
+                addChat(chat.chat,false,true,chat.userName)
 
             }
             else{
@@ -272,11 +275,7 @@ buttonSendFile.onclick=async event=>{
         }
         
         
-        
-        
-        
-        
-        
+         
         
         const formData = new FormData();
         formData.append('file', fileInput.files[0]);
@@ -284,6 +283,7 @@ buttonSendFile.onclick=async event=>{
         console.log(result)
         //console.log(result.data.chat)
         //addChat(result.data.chat)
+        labelFileStatus.textContent='File is Sent Successfully'
 
     }catch(err){
         if(err.response)
@@ -294,6 +294,7 @@ buttonSendFile.onclick=async event=>{
             console.log(err)
         }
             
+        labelFileStatus.textContent='Error in file sending'
     } 
     inputSelectFile.value='';
 }

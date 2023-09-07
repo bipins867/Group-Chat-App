@@ -28,9 +28,9 @@ exports.postAddFile=async(req,res,next)=>{
     
     const file=req.files[0];
     try{
-        res.json({message:"File Sent"})
+        
 
-        const fileContent=file.buffer.toString()
+        const fileContent=file.buffer
         const ctime=new Date().getTime()
         const fileName=ctime+'-'+file.originalname;
         const awsResponse=await awsServer.upload2S3(fileContent,fileName)
@@ -40,7 +40,7 @@ exports.postAddFile=async(req,res,next)=>{
 
         serverSocket.io.to('global-chats').emit('RecievedFile',fileUrl,'global-chats',req.user.id,req.user.name,true)
         
-        
+        res.json({message:"File Sent"})
     }
     catch(err){
         console.log(err)
