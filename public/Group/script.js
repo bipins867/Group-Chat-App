@@ -3,7 +3,7 @@ const memberList=document.getElementById('member-list')
 const buttonDassboard=document.getElementById('button-dassboard')
 const labelStatus=document.getElementById('label-status')
 
-const baseUrl='http://13.51.148.220:3000/'
+const baseUrl='http://13.51.148.220:3001/'
 
 
 function getTokenHeaders(){
