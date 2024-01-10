@@ -1,4 +1,4 @@
-const socketUrl='http://13.51.148.220:4040'
+const socketUrl='http://13.51.148.220:3232'
 
 const socket=io(socketUrl)
 
