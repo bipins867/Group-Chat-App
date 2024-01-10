@@ -1,4 +1,4 @@
-const io=require('socket.io')(3031,{
+const io=require('socket.io')(4040,{
     cors:{
         origin:"*"
     }
